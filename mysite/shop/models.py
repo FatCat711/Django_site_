@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -38,3 +39,64 @@ class SubCategory(models.Model):
 
     def __str__(self):
         return f"Subcategory {self.title} #{self.pk}"
+
+
+class Product(models.Model):
+    class Meta:
+        verbose_name = "продукт"
+        verbose_name_plural = "продукты"
+
+    title = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    description = models.TextField(default="")
+    fullDescription = models.TextField(default="")
+    free_delivery = models.BooleanField(default=False)
+    count = models.IntegerField(default=0)
+    date = models.DateTimeField(auto_now_add=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    specifications = models.ManyToManyField("Specification", related_name="products")
+    tags = models.ManyToManyField("Tag", related_name="products")
+    reviews = models.ManyToManyField("Review", related_name="products")
+    rating = models.FloatField(default=0)
+
+    def __str__(self):
+        return f"Product {self.title} {self.price}(#{self.pk})"
+
+
+def product_image_directory_path(instance: "ProductImage", filename: str) -> str:
+    return "products/product_{pk}.images/{filename}".format(
+        pk=instance.product.pk,
+        filename=filename,
+    )
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to=product_image_directory_path)
+
+
+class Specification(models.Model):
+    name = models.CharField(max_length=50)
+    value = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"Specification {self.name} {self.value}"
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"Tag #{self.pk} {self.name}"
+
+
+class Review(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField(null=True, blank=True)
+    text = models.TextField(default="")
+    rate = models.IntegerField(default=0)
+    date = models.DateTimeField(auto_now_add=True)
+    # product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Review #{self.pk} by {self.author.username}"

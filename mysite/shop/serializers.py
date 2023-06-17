@@ -6,6 +6,7 @@ from .models import *
 
 class SubCategorySerializer(serializers.ModelSerializer):
     image = SerializerMethodField()
+
     class Meta:
         model = SubCategory
         fields = ["id", "title", "image"]
@@ -20,11 +21,61 @@ class SubCategorySerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     subcategories = SubCategorySerializer(many=True, read_only=True)
     image = SerializerMethodField()
+
     class Meta:
         model = Category
         fields = ["id", "title", "image", "subcategories"]
 
     def get_image(self, obj):
+        return {
+            "src": obj.image.url,
+            "alt": ""
+        }
+
+
+class ProductImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ["image"]
+
+    def get_image(self, obj):
+        return {
+            "src": obj.image.url,
+            "alt": ""
+        }
+
+
+class ProductTagsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ["name"]
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ["author", "email", "text", "rate", "date"]
+
+
+class ProductSpecificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Specification
+        fields = ["name", "value"]
+
+
+class ProductFullSerializer(serializers.ModelSerializer):
+    images = ProductImagesSerializer(many=True, read_only=True)
+    tags = ProductTagsSerializer(many=True, read_only=True)
+    reviews = ReviewSerializer(many=True, read_only=True)
+    specifications = ProductSpecificationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Product
+        fields = ["id", "category", "price", "count", "date", "title",
+                  "description", "fullDescription", "free_delivery",
+                  "images", "tags", "reviews", "specifications", "rating"]
+
+    def get_images(self, obj):
         return {
             "src": obj.image.url,
             "alt": ""

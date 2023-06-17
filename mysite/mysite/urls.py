@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("frontend.urls")),
     path("", include("shop.urls")),
+    path("", include("myauth.urls")),
 ]
 
 import mimetypes
