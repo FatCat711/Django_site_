@@ -34,6 +34,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductImagesSerializer(serializers.ModelSerializer):
+    image = SerializerMethodField()
+
     class Meta:
         model = ProductImage
         fields = ["image"]
@@ -65,9 +67,11 @@ class ProductSpecificationSerializer(serializers.ModelSerializer):
 
 class ProductFullSerializer(serializers.ModelSerializer):
     images = ProductImagesSerializer(many=True, read_only=True)
+    # images = SerializerMethodField()
     tags = ProductTagsSerializer(many=True, read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
     specifications = ProductSpecificationSerializer(many=True, read_only=True)
+    rating = serializers.FloatField(source="get_rating")
 
     class Meta:
         model = Product
@@ -80,3 +84,20 @@ class ProductFullSerializer(serializers.ModelSerializer):
             "src": obj.image.url,
             "alt": ""
         }
+
+
+class ProductCatalogSerializer(serializers.ModelSerializer):
+    freeDelivery = serializers.BooleanField(source="free_delivery")
+    images = ProductImagesSerializer(many=True, read_only=True)
+    tags = ProductTagsSerializer(many=True, read_only=True)
+    reviews = serializers.IntegerField(source="get_reviews_count")
+    rating = serializers.FloatField(source="get_rating")
+
+    class Meta:
+        model = Product
+        fields = [
+            "id", "category", "price", "count", "date", "title", "description", "freeDelivery",
+            "images", "tags", "reviews", "rating",
+        ]
+
+

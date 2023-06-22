@@ -11,6 +11,7 @@ routers.register(r"product", ProductFullViewSet)
 urlpatterns = [
     path("api/", include(routers.urls)),
     path("api/categories/", CategoryViewSet.as_view({'get': 'list'})),
-    path("api/product/<pk>/reviews", ReviewViewSet.as_view()),
+    path("api/product/<pk>/reviews", ReviewView.as_view()),
+    path("api/catalog/", CatalogApiView.as_view()),
     # path("api/product/<id>/", ProductFullViewSet.as_view({'get': 'list'})),
 ]

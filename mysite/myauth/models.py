@@ -16,7 +16,8 @@ class Profile(models.Model):
         verbose_name_plural = "профили"
         ordering = ["id"]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="пользователь")
+    user = models.OneToOneField(User, on_delete=models.CASCADE,
+                                verbose_name="пользователь", related_name="profile")
     fullname = models.CharField(max_length=64, null=True)
     phone = models.CharField(max_length=11, null=True)
     avatar = models.ImageField(upload_to=profile_avatar_directory_path, null=True, blank=True)
