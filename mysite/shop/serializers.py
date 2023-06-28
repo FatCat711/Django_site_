@@ -53,6 +53,12 @@ class ProductTagsSerializer(serializers.ModelSerializer):
         fields = ["name"]
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ["id", "name"]
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review

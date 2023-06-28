@@ -58,6 +58,8 @@ class Product(models.Model):
     tags = models.ManyToManyField("Tag", related_name="products")
     # reviews = models.ManyToManyField("Review", related_name="products")
     rating = models.FloatField(default=0)
+    limited = models.BooleanField(default=False)
+    popular = models.BooleanField(default=False)
 
     def get_rating(self):
         reviews = Review.objects.filter(product=self)

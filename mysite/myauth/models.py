@@ -21,3 +21,4 @@ class Profile(models.Model):
     fullname = models.CharField(max_length=64, null=True)
     phone = models.CharField(max_length=11, null=True)
     avatar = models.ImageField(upload_to=profile_avatar_directory_path, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)

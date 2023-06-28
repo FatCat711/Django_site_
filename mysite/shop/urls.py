@@ -13,5 +13,7 @@ urlpatterns = [
     path("api/categories/", CategoryViewSet.as_view({'get': 'list'})),
     path("api/product/<pk>/reviews", ReviewView.as_view()),
     path("api/catalog/", CatalogApiView.as_view()),
-    # path("api/product/<id>/", ProductFullViewSet.as_view({'get': 'list'})),
+    path("api/products/popular/", CatalogPopularAPIView.as_view()),
+    path("api/products/limited/", CatalogLimitedAPIView.as_view()),
+    path("api/tags/", TagAPIView.as_view()),
 ]

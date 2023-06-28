@@ -12,4 +12,6 @@ urlpatterns = [
     path("api/sign-in", SingInView.as_view(), name="login"),
     path("api/sign-up", SignUpView.as_view(), name="register"),
     path("api/sign-out", LogoutView.as_view(), name="logout"),
+    path("api/profile", ProfileView.as_view()),
+    path("api/profile/password", ProfilePasswordView.as_view()),
 ]

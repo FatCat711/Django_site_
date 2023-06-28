@@ -1,8 +1,6 @@
 import json
 
-from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import RetrieveUpdateAPIView, CreateAPIView, ListAPIView
 from rest_framework.request import Request
@@ -55,9 +53,33 @@ class ReviewView(APIView):
 
 
 class CatalogApiView(ListAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.prefetch_related("images")
     serializer_class = ProductCatalogSerializer
     pagination_class = CatalogPagination
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_class = ProductFilter
     ordering_fields = ("rating", "price", "reviews", "date",)
+
+
+class CatalogPopularAPIView(ListAPIView):
+    queryset = Product.objects.filter(popular=True)
+    serializer_class = ProductCatalogSerializer
+
+    def get_paginated_response(self, data):
+        return Response(data)
+
+
+class CatalogLimitedAPIView(ListAPIView):
+    queryset = Product.objects.filter(limited=True)
+    serializer_class = ProductCatalogSerializer
+
+    def get_paginated_response(self, data):
+        return Response(data)
+
+
+class TagAPIView(ListAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+
+    def get_paginated_response(self, data):
+        return Response(data)
